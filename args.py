@@ -52,6 +52,10 @@ def init_sub_args_signal(args):
     os.makedirs(path_pose, exist_ok=True)
 
     shutil.copy(args.pose_fn, path_pose) 
+
+    for file in os.scandir(path_vid_frames):
+        os.remove(file.path)
+    
     subprocess.run(["ffmpeg", "-i", args.video_path,  f"{path_vid_frames}/%05d.jpg"])
 
     dataset = "UBnormal" if args.dataset == "UBnormal" else "ShanghaiTech"
