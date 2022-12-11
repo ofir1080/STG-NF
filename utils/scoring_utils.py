@@ -28,6 +28,13 @@ def score_dataset(score, metadata, args=None):
     return auc, scores_np
 
 
+def get_video_scores_with_smooth(score, metadata, args=None):
+    _, scores_arr = get_video_scores(score, metadata, args=args)
+    scores_arr = smooth_scores([scores_arr])
+    scores_arr = np.concatenate(scores_arr)
+    return scores_arr
+
+
 def get_dataset_scores(scores, metadata, args=None):
     dataset_gt_arr = []
     dataset_scores_arr = []
@@ -62,6 +69,14 @@ def get_dataset_scores(scores, metadata, args=None):
 
     return dataset_gt_arr, dataset_scores_arr
 
+def get_video_scores(scores, metadata, args=None):
+    metadata_np = np.array(metadata)
+    per_frame_scores_root = 'data/ShanghaiTech/gt/test_frame_mask/'
+    clip = "01_0016.npy" # not relevant for clip score only for clip ground truth...
+    clip_gt, clip_score = get_clip_score(scores, clip, metadata_np, metadata, per_frame_scores_root, args)
+    clip_score[clip_score == np.inf] = clip_score[clip_score != np.inf].max()
+    clip_score[clip_score == -1 * np.inf] = clip_score[clip_score != -1 * np.inf].min()
+    return clip_gt, clip_score
 
 def score_auc(scores_np, gt):
     scores_np[scores_np == np.inf] = scores_np[scores_np != np.inf].max()
