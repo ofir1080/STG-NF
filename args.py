@@ -14,7 +14,7 @@ def init_args():
     return init_sub_args(args)
 
 def init_args():
-    parser = init_parser_signal()
+    parser = init_parser_single()
     args = parser.parse_args()
     return init_sub_args(args)
 
@@ -38,7 +38,7 @@ def init_sub_args(args):
     model_args = args_rm_prefix(args, 'model_')
     return args, model_args
 
-def init_sub_args_signal(args):
+def init_sub_args_single(args):
     #parser.add_argument('--video_path', type=str, default=default_video_file, help='Path to infer video')
     #parser.add_argument('--pose_fn', type=str, metavar='POSE_FN', help="Path to pose filename JSON")
     dataset = "UBnormal" if args.dataset == "UBnormal" else "ShanghaiTech"
@@ -123,8 +123,8 @@ def init_parser(default_data_dir='data/', default_exp_dir='data/exp_dir'):
     return parser
 
 
-def init_parser_signal(default_data_dir='data/', default_exp_dir='data/exp_dir', default_video_file='./video.mp4'):
-    parser = argparse.ArgumentParser(prog="STG-NF-SIGNAL")
+def init_parser_single(default_data_dir='data/', default_exp_dir='data/exp_dir', default_video_file='./video.mp4'):
+    parser = argparse.ArgumentParser(prog="STG-NF-single")
         # General Args
     parser.add_argument('--dataset', type=str, default='ShanghaiTech',
                         choices=['ShanghaiTech', 'ShanghaiTech-HR', 'UBnormal'], help='Dataset for Eval')

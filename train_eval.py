@@ -9,7 +9,7 @@ from models.training import Trainer
 from utils.data_utils import trans_list
 from utils.optim_init import init_optimizer, init_scheduler
 from args import create_exp_dirs
-from args import init_parser, init_sub_args, init_parser_signal, init_sub_args_signal
+from args import init_parser, init_sub_args, init_parser_single, init_sub_args_single
 from dataset import get_dataset_and_loader
 from utils.train_utils import dump_args, init_model_params
 from utils.scoring_utils import score_dataset, get_video_scores_with_smooth
@@ -85,9 +85,9 @@ def test(model, args, loader):
 
 def main_one_video():
     parser = argparse.ArgumentParser(prog="STG-NF-SINGLE")
-    parser = init_parser_signal()
+    parser = init_parser_single()
     args = parser.parse_args()
-    args, model_args = init_sub_args_signal(args)
+    args, model_args = init_sub_args_single(args)
     pretrained = vars(args).get('checkpoint', None)
     dataset, loader = get_dataset_and_loader(args, trans_list=None, only_test=True)
     model_args = init_model_params(args, dataset)

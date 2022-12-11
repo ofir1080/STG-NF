@@ -15,7 +15,7 @@
             "justMyCode": true
         },
         {
-            "name": "train_eval_signal",
+            "name": "train_eval_single",
             "type": "python",
             "request": "launch",
             "cwd": "/home/gcqb36/STG-NF",
