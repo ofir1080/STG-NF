@@ -28,8 +28,8 @@ def score_dataset(score, metadata, args=None):
     return auc, scores_np
 
 
-def get_video_scores_with_smooth(score, metadata, args=None):
-    _, scores_arr = get_video_scores(score, metadata, args=args)
+def get_video_scores_with_smooth(score, metadata, frames_num, args=None):
+    scores_arr = get_video_scores(score, metadata, frames_num, args=args)
     scores_arr = smooth_scores([scores_arr])
     scores_arr = np.concatenate(scores_arr)
     return scores_arr
@@ -69,14 +69,12 @@ def get_dataset_scores(scores, metadata, args=None):
 
     return dataset_gt_arr, dataset_scores_arr
 
-def get_video_scores(scores, metadata, args=None):
+def get_video_scores(scores, metadata, frames_num, args=None):
     metadata_np = np.array(metadata)
-    per_frame_scores_root = 'data/ShanghaiTech/gt/test_frame_mask/'
-    clip = "01_0016.npy" # not relevant for clip score only for clip ground truth...
-    clip_gt, clip_score = get_clip_score(scores, clip, metadata_np, metadata, per_frame_scores_root, args)
+    clip_score = get_clip_score_single(scores, frames_num, metadata_np, metadata, args)
     clip_score[clip_score == np.inf] = clip_score[clip_score != np.inf].max()
     clip_score[clip_score == -1 * np.inf] = clip_score[clip_score != -1 * np.inf].min()
-    return clip_gt, clip_score
+    return clip_score
 
 def score_auc(scores_np, gt):
     scores_np[scores_np == np.inf] = scores_np[scores_np != np.inf].max()
@@ -127,3 +125,26 @@ def get_clip_score(scores, clip, metadata_np, metadata, per_frame_scores_root, a
     clip_score = np.amin(clip_ppl_score_arr, axis=0)
 
     return clip_gt, clip_score
+
+
+def get_clip_score_single(scores, frames_num, metadata_np, metadata, args):
+    clip_metadata = metadata
+    clip_fig_idxs = set([arr[2] for arr in clip_metadata])
+    scores_zeros = np.ones(frames_num) * np.inf
+    if len(clip_fig_idxs) == 0:
+        clip_person_scores_dict = {0: np.copy(scores_zeros)}
+    else:
+        clip_person_scores_dict = {i: np.copy(scores_zeros) for i in clip_fig_idxs}
+
+    for person_id in clip_fig_idxs:
+        person_metadata_inds = \
+            np.where(metadata_np[:, 2] == person_id)[0]
+        pid_scores = scores[person_metadata_inds]
+
+        pid_frame_inds = np.array([metadata[i][3] for i in person_metadata_inds]).astype(int)
+        clip_person_scores_dict[person_id][pid_frame_inds + int(args.seg_len / 2)] = pid_scores
+
+    clip_ppl_score_arr = np.stack(list(clip_person_scores_dict.values()))
+    clip_score = np.amin(clip_ppl_score_arr, axis=0)
+
+    return clip_score

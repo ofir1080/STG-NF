@@ -4,6 +4,7 @@ import time
 import argparse
 import shutil
 import subprocess
+import fnmatch
 
 
 
@@ -51,13 +52,16 @@ def init_sub_args_single(args):
     os.makedirs(path_vid_frames, exist_ok=True)
     os.makedirs(path_pose, exist_ok=True)
 
-    shutil.copy(args.pose_fn, path_pose) 
+    for file in os.scandir(path_pose):
+        os.remove(file.path)
 
     for file in os.scandir(path_vid_frames):
         os.remove(file.path)
-    
-    subprocess.run(["ffmpeg", "-i", args.video_path,  f"{path_vid_frames}/%05d.jpg"])
 
+    shutil.copy(args.pose_fn, path_pose) 
+    subprocess.run(["ffmpeg", "-i", args.video_path,  f"{path_vid_frames}/%05d.jpg"])
+    
+    frames_num = len(fnmatch.filter(os.listdir(path_vid_frames), '*.*'))
     dataset = "UBnormal" if args.dataset == "UBnormal" else "ShanghaiTech"
     args.vid_path = {'test':  path_vid_frames}
 
@@ -65,7 +69,7 @@ def init_sub_args_single(args):
 
     args.ckpt_dir = None
     model_args = args_rm_prefix(args, 'model_')
-    return args, model_args
+    return args, model_args, frames_num
 
 
 

@@ -2,6 +2,7 @@ import random
 import numpy as np
 import torch
 import argparse
+import os
 
 from torch.utils.tensorboard import SummaryWriter
 from models.STG_NF.model_pose import STG_NF
@@ -87,7 +88,7 @@ def main_one_video():
     parser = argparse.ArgumentParser(prog="STG-NF-SINGLE")
     parser = init_parser_single()
     args = parser.parse_args()
-    args, model_args = init_sub_args_single(args)
+    args, model_args, frames_num = init_sub_args_single(args)
     pretrained = vars(args).get('checkpoint', None)
     dataset, loader = get_dataset_and_loader(args, trans_list=None, only_test=True)
     model_args = init_model_params(args, dataset)
@@ -97,8 +98,12 @@ def main_one_video():
     model.load_state_dict(checkpoint['state_dict'], strict=False)
     model.set_actnorm_init()
     normality_scores = test(model, args, loader)
-    scores = get_video_scores_with_smooth(normality_scores, dataset["test"].metadata, args=args)
-    np.savez(f"singal_data/{args.dataset}/output/scores/" + args.scores_file_name, scores=scores) 
+
+    scores = get_video_scores_with_smooth(normality_scores, dataset["test"].metadata, frames_num, args=args)
+
+    scores_path = f"singal_data/{args.dataset}/output/scores"
+    os.makedirs(scores_path, exist_ok=True)
+    np.savez(scores_path + "/" + args.scores_file_name, scores=scores) 
     print(scores)
     
 
