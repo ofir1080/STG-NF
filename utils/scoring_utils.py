@@ -29,10 +29,10 @@ def score_dataset(score, metadata, args=None):
 
 
 def get_video_scores_with_smooth(score, metadata, frames_num, args=None):
-    scores_arr = get_video_scores(score, metadata, frames_num, args=args)
-    scores_arr = smooth_scores([scores_arr])
+    dp_scores_np, dp_scores_smoothed, dp_scores_pp_np, score_ids_arr = get_video_scores(score, metadata, frames_num, args=args)
+    scores_arr = smooth_scores([dp_scores_smoothed])
     scores_arr = np.concatenate(scores_arr)
-    return scores_arr
+    return scores_arr, dp_scores_np, dp_scores_smoothed, dp_scores_pp_np, score_ids_arr
 
 
 def get_dataset_scores(scores, metadata, args=None):
@@ -71,10 +71,10 @@ def get_dataset_scores(scores, metadata, args=None):
 
 def get_video_scores(scores, metadata, frames_num, args=None):
     metadata_np = np.array(metadata)
-    clip_score = get_clip_score_single(scores, frames_num, metadata_np, metadata, args)
-    clip_score[clip_score == np.inf] = clip_score[clip_score != np.inf].max()
-    clip_score[clip_score == -1 * np.inf] = clip_score[clip_score != -1 * np.inf].min()
-    return clip_score
+    clip_score, clip_ppl_score_arr, fig_score_id = get_clip_score_single(scores, frames_num, metadata_np, metadata, args)
+
+    scores_smoothed_np = score_align(clip_score)
+    return clip_score, scores_smoothed_np, clip_ppl_score_arr, fig_score_id
 
 def score_auc(scores_np, gt):
     scores_np[scores_np == np.inf] = scores_np[scores_np != np.inf].max()
@@ -146,5 +146,11 @@ def get_clip_score_single(scores, frames_num, metadata_np, metadata, args):
 
     clip_ppl_score_arr = np.stack(list(clip_person_scores_dict.values()))
     clip_score = np.amin(clip_ppl_score_arr, axis=0)
+    fig_score_id = [list(clip_fig_idxs)[i] for i in np.argmin(clip_ppl_score_arr, axis=0)]
 
-    return clip_score
+    return clip_score, clip_ppl_score_arr, fig_score_id
+
+def score_align(scores_np):
+    scores_np[scores_np == np.inf] = scores_np[scores_np != np.inf].max()
+    scores_np[scores_np == -1*np.inf] = scores_np[scores_np != -1*np.inf].min()
+    return scores_np

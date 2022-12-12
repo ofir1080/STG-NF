@@ -99,12 +99,12 @@ def main_one_video():
     model.set_actnorm_init()
     normality_scores = test(model, args, loader)
 
-    scores = get_video_scores_with_smooth(normality_scores, dataset["test"].metadata, frames_num, args=args)
+    scores_arr, dp_scores_np, dp_scores_smoothed, dp_scores_pp_np, score_ids_arr = get_video_scores_with_smooth(normality_scores, dataset["test"].metadata, frames_num, args=args)
 
     scores_path = f"singal_data/{args.dataset}/output/scores/{args.scores_file_name}" if '/' not in args.scores_file_name else args.scores_file_name
     os.makedirs(os.path.dirname(scores_path), exist_ok=True)
-    np.savez(scores_path, scores=scores) 
-    print(scores)
+    np.savez(scores_path, dp_scores_np=dp_scores_np, dp_scores_smoothed=dp_scores_smoothed, dp_scores_pp_np=dp_scores_pp_np, score_ids_arr=score_ids_arr) 
+    # print(scores)
     
 
 if __name__ == '__main__':
