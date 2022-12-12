@@ -101,9 +101,9 @@ def main_one_video():
 
     scores = get_video_scores_with_smooth(normality_scores, dataset["test"].metadata, frames_num, args=args)
 
-    scores_path = f"singal_data/{args.dataset}/output/scores"
-    os.makedirs(scores_path, exist_ok=True)
-    np.savez(scores_path + "/" + args.scores_file_name, scores=scores) 
+    scores_path = f"singal_data/{args.dataset}/output/scores/{args.scores_file_name}" if '/' not in args.scores_file_name else args.scores_file_name
+    os.makedirs(os.path.dirname(scores_path), exist_ok=True)
+    np.savez(scores_path, scores=scores) 
     print(scores)
     
 
