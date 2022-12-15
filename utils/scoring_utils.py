@@ -148,7 +148,7 @@ def get_clip_score_single(scores, frames_num, metadata_np, metadata, args):
     clip_score = np.amin(clip_ppl_score_arr, axis=0)
     fig_score_id = [list(clip_fig_idxs)[i] for i in np.argmin(clip_ppl_score_arr, axis=0)]
 
-    return clip_score, clip_ppl_score_arr, fig_score_id
+    return clip_score, clip_ppl_score_arr, list(clip_fig_idxs)
 
 def score_align(scores_np):
     scores_np[scores_np == np.inf] = scores_np[scores_np != np.inf].max()
