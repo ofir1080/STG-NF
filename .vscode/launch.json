@@ -23,7 +23,7 @@
             "console": "integratedTerminal",
             "args": ["--dataset", "ShanghaiTech", "--checkpoint", "checkpoints/ShanghaiTech_85_9.tar", "--batch_size", "256",
             "--pose_fn", "/home/gcqb36/STG-NF/data/ShanghaiTech/pose/test/01_0016_alphapose_tracked_person.json"
-            , "--video_path", "/datasas/data/ShanghaiTech/testing/videos/01_0016.avi"],
+            , "--vid_fn", "/datasas/data/ShanghaiTech/testing/videos/01_0016.avi"],
             "justMyCode": true
         }
     ]

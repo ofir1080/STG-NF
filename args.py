@@ -40,7 +40,7 @@ def init_sub_args(args):
     return args, model_args
 
 def init_sub_args_single(args):
-    #parser.add_argument('--video_path', type=str, default=default_video_file, help='Path to infer video')
+    #parser.add_argument('--vid_fn', type=str, default=default_video_file, help='Path to infer video')
     #parser.add_argument('--pose_fn', type=str, metavar='POSE_FN', help="Path to pose filename JSON")
     dataset = "UBnormal" if args.dataset == "UBnormal" else "ShanghaiTech"
     path = os.path.dirname(__file__)
@@ -59,7 +59,7 @@ def init_sub_args_single(args):
         os.remove(file.path)
 
     shutil.copy(args.pose_fn, path_pose) 
-    subprocess.run(["ffmpeg", "-i", args.video_path,  f"{path_vid_frames}/%05d.jpg"])
+    subprocess.run(["ffmpeg", "-i", args.vid_fn,  f"{path_vid_frames}/%05d.jpg"])
     
     frames_num = len(fnmatch.filter(os.listdir(path_vid_frames), '*.*'))
     dataset = "UBnormal" if args.dataset == "UBnormal" else "ShanghaiTech"
@@ -140,7 +140,7 @@ def init_parser_single(default_data_dir='data/', default_exp_dir='data/exp_dir',
     
     
         # infer afrgumants
-    parser.add_argument('--video_path', type=str, required=True, help='Path to infer video')
+    parser.add_argument('--vid_fn', type=str, required=True, help='Path to infer video')
     parser.add_argument('--pose_fn', type=str, required=True, metavar='POSE_FN', help="Path to pose filename JSON")
     parser.add_argument('--load_model', type=str, default=None, help='Load HMM model PKL')
     parser.add_argument("--scores_file_name", default="scores.npz", type=str, help="The name of the scores file that will be save (default: scores.npz)")
@@ -160,7 +160,7 @@ def init_parser_single(default_data_dir='data/', default_exp_dir='data/exp_dir',
 
 
         # Model Params
-    parser.add_argument('--checkpoint', type=str, metavar='model', help="Path to a pretrained model")
+    parser.add_argument('--checkpoint', type=str, metavar='model', default="checkpoints/ShanghaiTech_85_9.tar", help="Path to a pretrained model")
     parser.add_argument('--batch_size', type=int, default=256,  metavar='B', help='Batch size for train')
     parser.add_argument('--epochs', '-model_e', type=int, default=8, metavar='E', help = 'Number of epochs per cycle')
     parser.add_argument('--model_optimizer', '-model_o', type=str, default='adamx', metavar='model_OPT', help = "Optimizer")
