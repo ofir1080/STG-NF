@@ -3,9 +3,9 @@ import os
 import torch
 
 
-def init_model_params(args, dataset):
+def init_model_params(args):
     return {
-        'pose_shape': dataset["test"][0][0].shape if args.model_confidence else dataset["test"][0][0][:2].shape,
+        'pose_shape': (2, 24, 18),
         'hidden_channels': args.model_hidden_dim,
         'K': args.K,
         'L': args.L,

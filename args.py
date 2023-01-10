@@ -105,7 +105,7 @@ def init_parser(default_data_dir='data/', default_exp_dir='data/exp_dir'):
     parser.add_argument('--global_pose_segs', action='store_false', help='Use unormalized pose segs')
 
     # Model Params
-    parser.add_argument('--checkpoint', type=str, metavar='model', help="Path to a pretrained model")
+    parser.add_argument('--checkpoint', type=str, metavar='model',default="/home/gcqb36/anomalydetection/STG_NF/checkpoints/ShanghaiTech_85_9.tar", help="Path to a pretrained model")
     parser.add_argument('--batch_size', type=int, default=256,  metavar='B', help='Batch size for train')
     parser.add_argument('--epochs', '-model_e', type=int, default=8, metavar='E', help = 'Number of epochs per cycle')
     parser.add_argument('--model_optimizer', '-model_o', type=str, default='adamx', metavar='model_OPT', help = "Optimizer")
@@ -140,8 +140,8 @@ def init_parser_single(default_data_dir='data/', default_exp_dir='data/exp_dir',
     
     
         # infer afrgumants
-    parser.add_argument('--vid_fn', type=str, required=True, help='Path to infer video')
-    parser.add_argument('--pose_fn', type=str, required=True, metavar='POSE_FN', help="Path to pose filename JSON")
+    parser.add_argument('--vid_fn', type=str, required=False,default= "/datasas/data/ShanghaiTech/testing/videos/01_0014.avi", help='Path to infer video')
+    parser.add_argument('--pose_fn', type=str, required=False, default="/home/gcqb36/STG-NF/data/ShanghaiTech/pose/test/01_0014_alphapose_tracked_person.json", metavar='POSE_FN', help="Path to pose filename JSON")
     parser.add_argument('--load_model', type=str, default=None, help='Load HMM model PKL')
     parser.add_argument("--scores_file_name", default="scores.npz", type=str, help="The name of the scores file that will be save (default: scores.npz)")
 
@@ -160,7 +160,7 @@ def init_parser_single(default_data_dir='data/', default_exp_dir='data/exp_dir',
 
 
         # Model Params
-    parser.add_argument('--checkpoint', type=str, metavar='model', default="checkpoints/ShanghaiTech_85_9.tar", help="Path to a pretrained model")
+    parser.add_argument('--checkpoint', type=str, metavar='model', default="/home/gcqb36/anomalydetection/STG_NF/checkpoints/ShanghaiTech_85_9.tar", help="Path to a pretrained model")
     parser.add_argument('--batch_size', type=int, default=256,  metavar='B', help='Batch size for train')
     parser.add_argument('--epochs', '-model_e', type=int, default=8, metavar='E', help = 'Number of epochs per cycle')
     parser.add_argument('--model_optimizer', '-model_o', type=str, default='adamx', metavar='model_OPT', help = "Optimizer")

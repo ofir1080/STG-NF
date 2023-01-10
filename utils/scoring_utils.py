@@ -4,7 +4,7 @@ import numpy as np
 from scipy.ndimage import gaussian_filter1d
 from sklearn.metrics import roc_auc_score
 from tqdm import tqdm
-from dataset import shanghaitech_hr_skip
+from STG_NF.dataset import shanghaitech_hr_skip
 
 
 class bcolors:
