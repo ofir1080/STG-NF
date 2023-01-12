@@ -6,7 +6,7 @@ import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from STG_NF.models.STG_NF.utils import split_feature, compute_same_pad
+from models.STG_NF.utils import split_feature, compute_same_pad
 
 
 def gaussian_p(mean, logs, x):
