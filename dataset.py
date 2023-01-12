@@ -5,8 +5,8 @@ import re
 import numpy as np
 from torch.utils.data import Dataset
 from tqdm import tqdm
-from STG_NF.utils.data_utils import normalize_pose
-from STG_NF.utils.pose_utils import gen_clip_seg_data_np, get_ab_labels
+from utils.data_utils import normalize_pose
+from utils.pose_utils import gen_clip_seg_data_np, get_ab_labels
 from torch.utils.data import DataLoader
 
 SHANGHAITECH_HR_SKIP = [(1, 130), (1, 135), (1, 136), (6, 144), (6, 145), (12, 152)]

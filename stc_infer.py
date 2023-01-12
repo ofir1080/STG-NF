@@ -39,7 +39,7 @@ def main_one_video():
     args, model_args, frames_num = init_sub_args_single(args)
     pretrained = vars(args).get('checkpoint', None)
     dataset, loader = get_dataset_and_loader(args, trans_list=None, only_test=True)
-    model_args = init_model_params(args, dataset)
+    model_args = init_model_params(args)
     model = STG_NF(**model_args)
     model.to(args.device)
     checkpoint = torch.load(pretrained)

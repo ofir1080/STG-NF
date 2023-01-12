@@ -6,7 +6,7 @@ import math
 import torch
 import torch.nn as nn
 
-from STG_NF.models.STG_NF.modules_pose import (
+from models.STG_NF.modules_pose import (
     Conv2d,
     Conv2dZeros,
     ActNorm2d,
@@ -17,9 +17,9 @@ from STG_NF.models.STG_NF.modules_pose import (
     gaussian_likelihood,
     gaussian_sample,
 )
-from STG_NF.models.STG_NF.utils import split_feature
-from STG_NF.models.STG_NF.graph import Graph
-from STG_NF.models.STG_NF.stgcn import st_gcn
+from models.STG_NF.utils import split_feature
+from models.STG_NF.graph import Graph
+from models.STG_NF.stgcn import st_gcn
 
 def nan_throw(tensor, name="tensor"):
     stop = False
