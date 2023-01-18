@@ -113,10 +113,10 @@ class st_gcn(nn.Module):
         )
 
         if not residual:
-            self.residual = lambda x: 0
+            self.residual = self.zero
 
         elif (in_channels == out_channels) and (stride == 1):
-            self.residual = lambda x: x
+            self.residual = self.idetity
 
         else:
             self.residual = nn.Sequential(
@@ -129,6 +129,15 @@ class st_gcn(nn.Module):
             )
 
         self.relu = nn.ReLU(inplace=True)
+    
+    #### helper functions for multi-process ####
+    @staticmethod
+    def zero(x): return 0
+    
+    @staticmethod
+    def idetity(x): return x
+
+    #### end of helper functions for multi-process ####
 
     def forward(self, x, A):
 

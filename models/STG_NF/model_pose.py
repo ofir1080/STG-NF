@@ -90,19 +90,21 @@ class FlowStep(nn.Module):
         # 2. permute
         if flow_permutation == "invconv":
             self.invconv = InvertibleConv1x1(in_channels, LU_decomposed=LU_decomposed)
-            self.flow_permutation = lambda z, logdet, rev: self.invconv(z, logdet, rev)
-        elif flow_permutation == "shuffle":
-            self.shuffle = Permute2d(in_channels, shuffle=True)
-            self.flow_permutation = lambda z, logdet, rev: (
-                self.shuffle(z, rev),
-                logdet,
-            )
+            self.flow_permutation = self.invconv # lambda z, logdet, rev: self.invconv(z, logdet, rev)
         else:
-            self.reverse = Permute2d(in_channels, shuffle=False)
-            self.flow_permutation = lambda z, logdet, rev: (
-                self.reverse(z, rev),
-                logdet,
-            )
+            raise NotImplementedError('Not supported for multi-process')
+        # elif flow_permutation == "shuffle":
+        #     self.shuffle = Permute2d(in_channels, shuffle=True)
+        #     self.flow_permutation = lambda z, logdet, rev: (
+        #         self.shuffle(z, rev),
+        #         logdet,
+        #     )
+        # else:
+        #     self.reverse = Permute2d(in_channels, shuffle=False)
+        #     self.flow_permutation = lambda z, logdet, rev: (
+        #         self.reverse(z, rev),
+        #         logdet,
+        #     )
 
         # 3. coupling
         if flow_coupling == "additive":

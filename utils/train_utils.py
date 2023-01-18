@@ -19,7 +19,7 @@ def init_model_params(args):
         'temporal_kernel_size': args.temporal_kernel,
         'strategy': args.adj_strategy,
         'max_hops': args.max_hops,
-        'device': args.device,
+        # 'device': args.device,
     }
 
 
