@@ -92,19 +92,8 @@ class FlowStep(nn.Module):
             self.invconv = InvertibleConv1x1(in_channels, LU_decomposed=LU_decomposed)
             self.flow_permutation = self.invconv # lambda z, logdet, rev: self.invconv(z, logdet, rev)
         else:
-            raise NotImplementedError('Not supported for multi-process')
-        # elif flow_permutation == "shuffle":
-        #     self.shuffle = Permute2d(in_channels, shuffle=True)
-        #     self.flow_permutation = lambda z, logdet, rev: (
-        #         self.shuffle(z, rev),
-        #         logdet,
-        #     )
-        # else:
-        #     self.reverse = Permute2d(in_channels, shuffle=False)
-        #     self.flow_permutation = lambda z, logdet, rev: (
-        #         self.reverse(z, rev),
-        #         logdet,
-        #     )
+            self.perm_func = Permute2d(in_channels, shuffle=(flow_permutation == 'suffle'))
+            self.flow_permutation = self.flow_permutation_fn
 
         # 3. coupling
         if flow_coupling == "additive":
@@ -124,6 +113,11 @@ class FlowStep(nn.Module):
             ])
         else:
             self.edge_importance = [1] * len(self.block)
+
+    #### helper functions for multi-processing ####
+    def flow_permutation_fn(self, z, logdet, rev):
+        return self.perm_func(z, rev), logdet
+    #### end of helper functions for multi-processing ####
 
     def forward(self, input, logdet=None, reverse=False, label=None):
         if not reverse:
